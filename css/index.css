@@ -1,0 +1,22 @@
+.card {
+    width: auto;
+    margin-top: 15px;
+}
+#carouselOffers {
+    height:  600px;
+}
+.jumbotron{
+    margin-top: 30px;
+}
+.intro{
+    text-align: center;  
+
+    margin-top: 150px;
+}
+.carousel-item>img{
+   
+}
+
+ .row{
+     justify-content: center;
+ }
