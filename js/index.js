@@ -14,5 +14,5 @@ function showAlert(message, success = true) {
     setTimeout(() => {
         // console.log(alertElement);
         $('.alert').alert('close');
-    }, 1000);
+    }, 2000);
 }

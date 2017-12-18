@@ -83,8 +83,8 @@ class Cart {
                 url: "https://formspree.io/oleh.petryk@gmail.com",
                 method: "POST",
                 data: {
-                    clientName : $('#client-name').val(),
-                    clientEmail : $('#client-email').val(),
+                    clientName: $('#client-name').val(),
+                    clientEmail: $('#client-email').val(),
                     cart: this.cart
                 },
                 dataType: "json"
@@ -92,15 +92,17 @@ class Cart {
                 .done(() => {
                     form.reset();
                     this.cart = {};
+                    this.saveCart();
+                    this.updateBadge();
                     this.renderCart();
                     window.showAlert('Thank you for your order');
                 })
                 .fail(() => {
-                    window.showAlert('Sorry, there is an error , Please try again later!',false)
+                    window.showAlert('Sorry, there is an error , Please try again later!', false)
                 });
         }
-        else{
-            form.submit();
+        else {
+            window.showAlert("Please fill all fields",false);
         }
     }
 }
