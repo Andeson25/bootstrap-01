@@ -102,7 +102,7 @@ class Cart {
                 });
         }
         else {
-            window.showAlert("Please fill all fields",false);
+            window.showAlert("Please fill all fields", false);
         }
     }
 }
