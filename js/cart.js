@@ -5,15 +5,18 @@ class Cart {
         this.addEventListeners();
         this.updateBadge();
     }
+
     addEventListeners() {
-        this.cartContainer.on('show.bs.modal', () => this.renderCart() );
-        this.cartContainer.find('.order').click( () => this.order() );
+        this.cartContainer.on('show.bs.modal', () => this.renderCart());
+        this.cartContainer.find('.order').click(ev => this.order(ev));
     }
+
     addProduct(id) {
         this.cart[id] = (this.cart[id] || 0) + 1;
         this.saveCart();
         this.updateBadge();
     }
+
     deleteProduct(id) {
         if (this.cart[id] > 1) {
             this.cart[id] -= 1;
@@ -23,12 +26,14 @@ class Cart {
         this.saveCart();
         this.updateBadge();
     }
+
     saveCart() {
         localStorage['cart'] = JSON.stringify(this.cart);
     }
+
     renderCart() {
         let total = 0;
-        let cartDomSting = 
+        let cartDomSting =
             `<div class="container">
                 <div class="row">
                     <div class="col-5"><strong>Product</strong></div>
@@ -38,7 +43,7 @@ class Cart {
         for (const id in this.cart) {
             const product = productList.getProductById(id);
             total += product.price * this.cart[id];
-            cartDomSting += 
+            cartDomSting +=
                 `<div class="row" data-id="${id}"> 
                     <div class="col-5">${product.title}</div>
                     <div class="col-3">${product.price}</div>
@@ -55,35 +60,47 @@ class Cart {
                 </div>            
         </div>`;
         this.cartContainer.find('.cart-product-list-container').html(cartDomSting);
-        this.cartContainer.find('.plus').click( ev => this.changeQuantity(ev, this.addProduct) );
-        this.cartContainer.find('.minus').click( ev => this.changeQuantity(ev, this.deleteProduct) );
+        this.cartContainer.find('.plus').click(ev => this.changeQuantity(ev, this.addProduct));
+        this.cartContainer.find('.minus').click(ev => this.changeQuantity(ev, this.deleteProduct));
     }
+
     changeQuantity(ev, operation) {
         const button = $(ev.target);
         const id = button.parent().parent().data('id');
         operation.call(this, id);
         this.renderCart();
     }
+
     updateBadge() {
         $('#cart-badge').text(Object.keys(this.cart).length);
     }
-    order() {
-        const form  = this.cartContainer.find('form')[0];
+
+    order(ev) {
+        const form = this.cartContainer.find('form')[0];
         if (form.checkValidity()) {
             ev.preventDefault();
             $.ajax({
-                url: "https://formspree.io/koldovsky@gmail.com", 
+                url: "https://formspree.io/oleh.petryk@gmail.com",
                 method: "POST",
-                data: this.cart,
+                data: {
+                    clientName : $('#client-name').val(),
+                    clientEmail : $('#client-email').val(),
+                    cart: this.cart
+                },
                 dataType: "json"
             })
-             .done( () => {
-                 form.reset();
-                 this.cart = {};
-                 this.renderCart();
-                 window.showAlert('Thank you for your order');
-             } )
-             .fail( () => {} );    
+                .done(() => {
+                    form.reset();
+                    this.cart = {};
+                    this.renderCart();
+                    window.showAlert('Thank you for your order');
+                })
+                .fail(() => {
+                    window.showAlert('Sorry, there is an error , Please try again later!',false)
+                });
+        }
+        else{
+            form.submit();
         }
     }
 }
